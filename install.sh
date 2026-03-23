@@ -6,7 +6,7 @@ set -euo pipefail
 
 VERSION="${TRYCOOK_VERSION:-latest}"
 INSTALL_DIR="${TRYCOOK_INSTALL_DIR:-$HOME/.trycook/bin}"
-REPO="caio-systems/offerai-monorepo"
+REPO="caio-systems/trycookcli"
 
 # --- Detect platform ---
 
@@ -31,19 +31,12 @@ BINARY="trycook-${PLATFORM}"
 # --- Resolve download URL ---
 
 if [ "$VERSION" = "latest" ]; then
-  # Fetch latest trycookcli release tag from GitHub API
-  TAG="$(curl -fsSL "https://api.github.com/repos/${REPO}/releases" | \
-    grep -o '"tag_name": *"trycookcli-v[^"]*"' | head -1 | grep -o 'trycookcli-v[^"]*')"
-  if [ -z "$TAG" ]; then
-    echo "Error: Could not find latest trycookcli release"
-    exit 1
-  fi
+  DOWNLOAD_URL="https://github.com/${REPO}/releases/latest/download/${BINARY}"
+  CHECKSUM_URL="https://github.com/${REPO}/releases/latest/download/checksums.txt"
 else
-  TAG="trycookcli-v${VERSION}"
+  DOWNLOAD_URL="https://github.com/${REPO}/releases/download/v${VERSION}/${BINARY}"
+  CHECKSUM_URL="https://github.com/${REPO}/releases/download/v${VERSION}/checksums.txt"
 fi
-
-DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${TAG}/${BINARY}"
-CHECKSUM_URL="https://github.com/${REPO}/releases/download/${TAG}/checksums.txt"
 
 # --- Download ---
 
