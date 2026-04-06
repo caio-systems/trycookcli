@@ -2,6 +2,8 @@
 
 CLI and SDK for the [TryCook](https://trycook.ai) platform. Discover, inspect, and execute tools from your terminal or code.
 
+> **Repository policy.** This repository is a **release/install repo only**. The TryCook CLI source of truth lives in a private monorepo and is **not** mirrored here. Binary distribution is exclusively via [GitHub Releases](https://github.com/caio-systems/trycookcli/releases). There is no automated subtree sync, and one will not be added — public source, if ever desired, lands as an explicit, curated PR. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`RELEASING.md`](./RELEASING.md).
+
 ## Install
 
 ```bash
