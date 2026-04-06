@@ -1,0 +1,90 @@
+name: policy-and-lint
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  policy-guard:
+    name: policy-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify only allowlisted files exist
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Allowlist for this release/install-only repo.
+          # Anything outside this set fails the build — see CONTRIBUTING.md.
+          allowed_files=(
+            ".gitignore"
+            "LICENSE"
+            "README.md"
+            "CONTRIBUTING.md"
+            "RELEASING.md"
+            "install.sh"
+          )
+          allowed_dirs=(
+            ".github"
+          )
+
+          fail=0
+          while IFS= read -r path; do
+            # Skip empty
+            [ -z "$path" ] && continue
+
+            # Top-level dirs
+            top="${path%%/*}"
+            if [ "$top" != "$path" ]; then
+              for d in "${allowed_dirs[@]}"; do
+                if [ "$top" = "$d" ]; then
+                  continue 2
+                fi
+              done
+              echo "::error file=$path::file lives under disallowed directory '$top/' (see CONTRIBUTING.md)"
+              fail=1
+              continue
+            fi
+
+            # Top-level files
+            for f in "${allowed_files[@]}"; do
+              if [ "$path" = "$f" ]; then
+                continue 2
+              fi
+            done
+            echo "::error file=$path::top-level file '$path' is not on the allowlist (see CONTRIBUTING.md)"
+            fail=1
+          done < <(git ls-files)
+
+          if [ "$fail" -ne 0 ]; then
+            echo ""
+            echo "Repository policy violation. This repo is release/install-only."
+            echo "Allowed top-level files: ${allowed_files[*]}"
+            echo "Allowed top-level dirs:  ${allowed_dirs[*]}"
+            exit 1
+          fi
+
+          echo "OK — repository contents match the release/install-only policy."
+
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y shellcheck
+
+      - name: Run shellcheck on install.sh
+        run: shellcheck --severity=warning install.sh
