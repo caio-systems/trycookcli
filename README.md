@@ -7,8 +7,16 @@ CLI and SDK for the [TryCook](https://trycook.ai) platform. Discover, inspect, a
 ## Install
 
 ```bash
+curl -fsSL https://trycook.ai/install.sh | sh
+```
+
+Or via npm:
+
+```bash
 npm install -g trycookcli
 ```
+
+> `install.sh` is intentionally **not** stored in this public repository. The canonical installer is served from `https://trycook.ai/install.sh`, backed by the private monorepo source of truth.
 
 ## CLI
 

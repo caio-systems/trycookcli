@@ -6,7 +6,7 @@ Thanks for the interest — please read this first.
 
 `caio-systems/trycookcli` is a **release/install repo only**. The TryCook CLI source code lives in a private monorepo. This repository exists so users can:
 
-- Install the CLI (`install.sh`, `npm install -g trycookcli`)
+- Install the CLI (`curl -fsSL https://trycook.ai/install.sh | sh`, `npm install -g trycookcli`)
 - Read public documentation
 - Download official binaries from [GitHub Releases](https://github.com/caio-systems/trycookcli/releases)
 
@@ -17,7 +17,6 @@ It does **not** track CLI source, build outputs, tests, or internal tooling.
 PRs and issues are welcome for the small set of intentionally public files:
 
 - `README.md`
-- `install.sh`
 - `LICENSE`
 - `CONTRIBUTING.md` / `RELEASING.md`
 - Documentation about installation and usage
