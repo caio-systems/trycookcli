@@ -7,7 +7,7 @@ This document is the **only** supported pipeline for publishing TryCook CLI bina
 ## Where the source lives
 
 - **Source of truth:** private monorepo, subdirectory `trycookcli/`
-- **Public repo:** `caio-systems/trycookcli` — install scripts, README, license, releases only
+- **Public repo:** `caio-systems/trycookcli` — README, license, release metadata, and releases only
 - **Distribution:** GitHub Releases on the public repo
 
 ## Release pipeline
@@ -52,7 +52,7 @@ gh release create trycookcli-vX.Y.Z \
   ./dist/checksums.txt
 ```
 
-Each release ships exactly **5 assets** to keep `install.sh` deterministic.
+Each release ships exactly **5 assets** to keep the hosted installer deterministic.
 
 ### 4. Verify the release
 
@@ -62,6 +62,14 @@ curl -fsSL https://trycook.ai/install.sh | bash
 ```
 
 The install script reads from the latest release of this repo, so a fresh install on a clean machine is the canonical smoke test.
+
+## Hosted installer
+
+The canonical installer script is served by `https://trycook.ai/install.sh`.
+
+- It is sourced from the private monorepo, not from this public repository.
+- This repository should not contain a committed `install.sh`.
+- Public release verification should always test the hosted route, not a file from this repo.
 
 ## What you must NOT do
 
@@ -76,7 +84,6 @@ The install script reads from the latest release of this repo, so a fresh instal
 Direct edits via PR are allowed for the public files only:
 
 - `README.md`
-- `install.sh`
 - `LICENSE`
 - `CONTRIBUTING.md`
 - `RELEASING.md`

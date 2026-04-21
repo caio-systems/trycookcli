@@ -30,7 +30,6 @@ jobs:
             "README.md"
             "CONTRIBUTING.md"
             "RELEASING.md"
-            "install.sh"
           )
           allowed_dirs=(
             ".github"
@@ -81,10 +80,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install shellcheck
+      - name: Assert install.sh is not present
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y shellcheck
-
-      - name: Run shellcheck on install.sh
-        run: shellcheck --severity=warning install.sh
+          if [ -f install.sh ]; then
+            echo "::error file=install.sh::install.sh must not exist in this public repository"
+            exit 1
+          fi
+          echo "OK — install.sh is intentionally served by trycook.ai and not stored here."
